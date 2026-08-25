@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "build": "tsc -b",
+    "start": "node dist/examples/enterprise-bot.js",
+    "start:prod": "NODE_ENV=production node dist/examples/enterprise-bot.js",
     "test": "node --test dist/tests/*.test.js",
     "bench": "node dist/benchmarks/protocol-bench.js"
   },

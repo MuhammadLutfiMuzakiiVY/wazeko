@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  wazeko-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wazeko-enterprise-bot
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - wazeko-auth-data:/app/wazeko-session
+      - wazeko-media-data:/app/media-cache
+    depends_on:
+      - redis
+    networks:
+      - wazeko-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.2"
+          memory: 128M
+
+  redis:
+    image: redis:7-alpine
+    container_name: wazeko-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - wazeko-network
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  wazeko-auth-data:
+    driver: local
+  wazeko-media-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  wazeko-network:
+    driver: bridge
