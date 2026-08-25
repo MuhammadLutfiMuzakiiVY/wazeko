@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Dokumentasi Resmi Wazeko
+    url: https://muhammadlutfimuzakiivy.github.io/Wazeko/
+    about: Baca dokumentasi lengkap, panduan quickstart, dan referensi API.
+  - name: 💬 Diskusi & Tanya Jawab
+    url: https://github.com/MuhammadLutfiMuzakiiVY/Wazeko/discussions
+    about: Ajukan pertanyaan atau diskusi seputar integrasi bot dan WhatsApp protocol.

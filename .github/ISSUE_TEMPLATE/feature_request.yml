@@ -1,0 +1,34 @@
+name: 💡 Feature Request
+description: Usulkan fitur baru, adapter database, atau peningkatan API untuk Wazeko
+title: "[FEAT]: "
+labels: ["enhancement", "feature-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Punya ide untuk membuat Wazeko lebih baik? Sampaikan usulan fitur Anda di bawah ini!
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Deskripsi Fitur / Kebutuhan
+      description: Jelaskan fitur apa yang ingin Anda tambahkan dan masalah apa yang diselesaikannya.
+      placeholder: "Saya mengusulkan penambahan adapter database untuk Supabase / Cloudflare KV..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Usulan Solusi / Desain API
+      description: Bagaimana bentuk API atau kode yang diharapkan jika fitur ini diimplementasikan?
+      placeholder: |
+        ```ts
+        const store = new SupabaseAuthStore(supabaseClient);
+        ```
+    validations:
+      required: false
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Kontribusi
+      options:
+        - label: "Saya bersedia membuat Pull Request untuk fitur ini 🚀"
