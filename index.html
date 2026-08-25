@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wazeko — Modern TypeScript WhatsApp Web Engine</title>
+  <meta name="description" content="A TypeScript-native asynchronous WhatsApp Web client library with enterprise architecture, anti-corrupt session persistence, and priority queue workers.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-card: rgba(16, 24, 40, 0.75);
+      --bg-card-hover: rgba(22, 34, 58, 0.9);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(37, 211, 102, 0.3);
+      --accent-green: #25D366;
+      --accent-emerald: #10B981;
+      --accent-cyan: #06B6D4;
+      --accent-blue: #3B82F6;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: radial-gradient(circle at 50% 0%, #152238 0%, var(--bg-main) 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Header & Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(9, 13, 22, 0.8);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #000;
+      box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+    }
+    .logo-text { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent-green); }
+    .btn-github {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main) !important;
+      padding: 8px 16px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Container */
+    .main-wrapper { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 60px 0 80px;
+      position: relative;
+    }
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37, 211, 102, 0.1);
+      border: 1px solid rgba(37, 211, 102, 0.25);
+      color: var(--accent-green);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #FFFFFF 30%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 36px;
+    }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-emerald));
+      color: #000;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(37, 211, 102, 0.5);
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: var(--bg-card-hover); }
+
+    /* Features Grid */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      font-size: 1.05rem;
+    }
+    .grid-pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+    .pillar-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-glow);
+      background: var(--bg-card-hover);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+    .pillar-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #FFF;
+    }
+    .pillar-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Code Terminal Box */
+    .code-preview-section {
+      background: #0B0F19;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 80px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .terminal-header {
+      background: #111827;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .terminal-dots { display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #EF4444; }
+    .dot.yellow { background: #F59E0B; }
+    .dot.green { background: #10B981; }
+    .terminal-title { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+    .code-content {
+      padding: 24px;
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      overflow-x: auto;
+      color: #E2E8F0;
+      line-height: 1.7;
+    }
+    .keyword { color: #F43F5E; }
+    .function { color: #38BDF8; }
+    .string { color: #34D399; }
+    .comment { color: #64748B; font-style: italic; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    footer a { color: var(--accent-green); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-area">
+        <div class="logo-badge">W</div>
+        <span class="logo-text">Wazeko</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Pilar Arsitektur</a>
+        <a href="#quickstart">Quickstart</a>
+        <a href="https://github.com/MuhammadLutfiMuzakiiVY/wazeko" target="_blank" class="btn-github">
+          <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-wrapper">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="tag-badge">⚡ Enterprise-Grade WhatsApp Web Engine</div>
+      <h1>Asynchronous TypeScript Client for WhatsApp Web</h1>
+      <p>Dibangun dari awal untuk keandalan maksimal: persistensi sesi anti-corrupt, isolasi antrean pesan dengan human jitter anti-ban, dan monitoring observabilitas terpadu.</p>
+      <div class="hero-cta">
+        <a href="#quickstart" class="btn-primary">Mulai Sekarang →</a>
+        <a href="https://github.com/MuhammadLutfiMuzakiiVY/wazeko" target="_blank" class="btn-secondary">Lihat di GitHub</a>
+      </div>
+    </section>
+
+    <!-- 5 Pillars -->
+    <section id="features">
+      <h2 class="section-title">5 Pilar Arsitektur Produksi</h2>
+      <p class="section-subtitle">Didesain khusus untuk menangani trafik skala tinggi tanpa risiko ban dan kerusakan sesi.</p>
+
+      <div class="grid-pillars">
+        <div class="pillar-card">
+          <span class="card-icon">🛡️</span>
+          <h3>Persistensi Sesi Anti-Corrupt</h3>
+          <p>Penulisan kunci enkripsi atomik dengan OS-level rename dan checksum SHA-256 integrity check. Dilengkapi auto-backup terenkripsi <b>AES-256-GCM</b> ke penyimpanan awan.</p>
+        </div>
+
+        <div class="pillar-card">
+          <span class="card-icon">🚦</span>
+          <h3>Antrean Pesan & Anti-Ban Jitter</h3>
+          <p>Rate limiter dengan delay acak (jitter 1.5s–4.0s) yang meniru perilaku manusia, routing prioritas (High, Normal, Low), serta isolasi kegagalan dengan exponential backoff.</p>
+        </div>
+
+        <div class="pillar-card">
+          <span class="card-icon">⚡</span>
+          <h3>Streaming Media & Pembersihan TTL</h3>
+          <p>Pemrosesan video/audio resolusi tinggi menggunakan <code>stream.pipeline</code> langsung ke disk tanpa membebani RAM heap, dengan worker pembersihan cache berkala.</p>
+        </div>
+
+        <div class="pillar-card">
+          <span class="card-icon">🧩</span>
+          <h3>Plugin Modular & Hot-Reloading</h3>
+          <p>Command registry dinamis berbasis ESM/TypeScript yang dapat dimuat ulang (hot-reload) saat runtime tanpa me-restart koneksi socket WhatsApp.</p>
+        </div>
+
+        <div class="pillar-card">
+          <span class="card-icon">📊</span>
+          <h3>Observabilitas & Web Dashboard</h3>
+          <p>Structured JSON logger dan HTTP monitoring server bawaan dengan endpoint <code>/health</code>, <code>/metrics</code>, dan antarmuka Web live QR Code scanner.</p>
+        </div>
+
+        <div class="pillar-card">
+          <span class="card-icon">🔒</span>
+          <h3>Native Signal & Noise Protocol</h3>
+          <p>Implementasi protokol E2EE Noise XX dan Signal Protocol murni dengan manajemen PreKey bundle yang andal dan teruji fuzzer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Quickstart -->
+    <section id="quickstart">
+      <h2 class="section-title">Quickstart Cepat</h2>
+      <p class="section-subtitle">Menghubungkan bot WhatsApp hanya dengan beberapa baris kode TypeScript.</p>
+
+      <div class="code-preview-section">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+          <div class="terminal-title">example-bot.ts</div>
+        </div>
+        <pre class="code-content"><code><span class="keyword">import</span> { Wazeko, defaultClientConfig, AtomicFileAuthStore } <span class="keyword">from</span> <span class="string">"wazeko"</span>;
+
+<span class="comment">// 1. Inisialisasi Auth Store Anti-Corrupt</span>
+<span class="keyword">const</span> authStore = <span class="keyword">new</span> <span class="function">AtomicFileAuthStore</span>(<span class="string">"./session"</span>, { checksumValidation: <span class="keyword">true</span> });
+
+<span class="comment">// 2. Buat instance Wazeko Client</span>
+<span class="keyword">const</span> client = <span class="keyword">new</span> <span class="function">Wazeko</span>(defaultClientConfig(), authStore);
+
+<span class="comment">// 3. Daftarkan Perintah (Hot-Reloadable)</span>
+client.plugins.<span class="function">register</span>({
+  name: <span class="string">"ping"</span>,
+  execute: <span class="keyword">async</span> (ctx) => {
+    <span class="keyword">await</span> ctx.<span class="function">reply</span>(<span class="string">"🏓 Pong! WhatsApp Bot Online."</span>);
+  }
+});
+
+<span class="comment">// 4. Jalankan Web Monitoring & Hubungkan ke WhatsApp</span>
+<span class="keyword">await</span> client.monitor.<span class="function">start</span>();
+<span class="keyword">await</span> client.<span class="function">connect</span>();</code></pre>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 Wazeko Open Source Project. Released under MIT License.</p>
+  </footer>
+
+</body>
+</html>
