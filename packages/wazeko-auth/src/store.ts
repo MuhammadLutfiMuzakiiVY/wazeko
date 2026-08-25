@@ -2,6 +2,8 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import { Credentials } from "../../wazeko-core/src/index.js";
 
+export type AuthMethod = "qr" | "pairing-code";
+
 export interface AuthStore {
   load(): Promise<Credentials | null>;
   save(credentials: Credentials): Promise<void>;

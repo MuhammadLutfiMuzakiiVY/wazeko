@@ -2,13 +2,18 @@ import { EventEmitter } from "events";
 import { ConnectionState, Jid, Message, MessageContent, WazekoEventMap, WazekoEventName } from "../../wazeko-types/src/index.js";
 import { ProtocolNode, BinaryEncoder } from "../../wazeko-protocol/src/index.js";
 import { Credentials, initCredentials } from "../../wazeko-core/src/index.js";
-import { AuthStore, FileAuthStore, MemoryAuthStore, PairingCodeManager, QrCodeManager } from "../../wazeko-auth/src/index.js";
+import { AuthStore, AtomicFileAuthStore, MemoryAuthStore, PairingCodeManager, QrCodeManager } from "../../wazeko-auth/src/index.js";
 import { ReconnectManager } from "../../wazeko-transport/src/index.js";
 import { ClientConfig } from "./config.js";
 import { WazekoBuilder } from "./builder.js";
 import { AsyncEventQueue } from "./events.js";
 import { Messaging } from "./messaging.js";
 import { Groups } from "./groups.js";
+import { MessageQueue } from "./queue/message-queue.js";
+import { MessageJobOptions } from "./queue/types.js";
+import { CommandRegistry } from "./plugins/command-loader.js";
+import { StructuredLogger } from "./observability/logger.js";
+import { MonitoringServer } from "./observability/monitoring-server.js";
 
 export interface WazekoClientInternal {
   getMe(): Jid | undefined;
@@ -28,6 +33,10 @@ export class Wazeko extends EventEmitter implements WazekoClientInternal {
 
   public readonly messaging: Messaging;
   public readonly groups: Groups;
+  public readonly queue: MessageQueue;
+  public readonly plugins: CommandRegistry;
+  public readonly logger: StructuredLogger;
+  public readonly monitor: MonitoringServer;
 
   static builder(): WazekoBuilder {
     return new WazekoBuilder();
@@ -39,13 +48,32 @@ export class Wazeko extends EventEmitter implements WazekoClientInternal {
     if (customStore) {
       this.authStore = customStore;
     } else if (config.authStorePath) {
-      this.authStore = new FileAuthStore(config.authStorePath);
+      this.authStore = new AtomicFileAuthStore(config.authStorePath);
     } else {
       this.authStore = new MemoryAuthStore();
     }
     this.credentials = initCredentials();
     this.messaging = new Messaging(this);
     this.groups = new Groups(this);
+
+    this.logger = new StructuredLogger({ service: "wazeko-client" });
+    this.queue = new MessageQueue({
+      sendMessage: (to, content) => this.messaging.sendMessage(to, content),
+    });
+    this.plugins = new CommandRegistry();
+    this.monitor = new MonitoringServer({
+      client: this,
+      queue: this.queue,
+      registry: this.plugins,
+      qrCodeSupplier: () => this.qrManager.current?.raw ?? null,
+    });
+
+    // Wire up incoming message dispatch to dynamic plugin loader
+    this.on("message", (msg: Message) => {
+      this.plugins.handleMessage(this, msg).catch((err) => {
+        this.logger.error("Plugin handler execution failed", err);
+      });
+    });
   }
 
   getMe(): Jid | undefined {
@@ -111,6 +139,7 @@ export class Wazeko extends EventEmitter implements WazekoClientInternal {
     this.setState("disconnected");
     this.emitEvent("disconnect", { reason });
     this.eventQueue.close();
+    await this.monitor.stop();
   }
 
   async dispatchNode(node: ProtocolNode, message?: Message): Promise<void> {
@@ -120,8 +149,18 @@ export class Wazeko extends EventEmitter implements WazekoClientInternal {
     }
   }
 
+  /**
+   * Sends a message directly (un-queued)
+   */
   async sendMessage(to: Jid | string, content: MessageContent): Promise<Message> {
     return this.messaging.sendMessage(to, content);
+  }
+
+  /**
+   * Enqueues message through the priority rate-limited queue worker (Anti-Ban protected)
+   */
+  async enqueueMessage(to: Jid | string, content: MessageContent, options?: MessageJobOptions): Promise<Message> {
+    return this.queue.enqueue(to, content, options);
   }
 
   async sendImage(

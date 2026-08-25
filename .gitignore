@@ -10,3 +10,5 @@ sessions/
 *.session.json
 *Requirements_Document*.md
 *Requirements Document*.md
+media-cache/
+wazeko-session/
