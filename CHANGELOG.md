@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-08-25
 
 ### Added
-- Initial project architecture and Cargo workspace definition.
-- `wazeko-types`: JID parsing/validation, Message structures, Event system, Contact and Group models.
-- `wazeko-core`: Binary protocol encoder, decoder, token dictionary, ProtocolNode tree representation, Session & Device states.
-- `wazeko-transport`: Async WebSocket client with `Socket` trait and `ReconnectManager` exponential backoff.
-- `wazeko-auth`: `AuthStore` trait with `FileAuthStore` and `MemoryAuthStore`, ANSI QR code generator, Pairing Code challenge manager.
-- `wazeko`: Main facade client with `WazekoBuilder`, event receiver channels, messaging API, and examples.
+- Complete TypeScript & Node.js monorepo architecture aligned with `Wazeko_Product_Requirements_Document_Updated.md`.
+- `@wazeko/types`: JID parser/validator (`user@s.whatsapp.net`, `group@g.us`, `lid`, `broadcast`), Message & MessageContent models, Event maps, Contact, GroupMetadata.
+- `@wazeko/protocol`: Binary protocol framing encoder, decoder, single-byte token dictionary, ProtocolNode tree builder, and WAProto Protocol Buffers schema definitions.
+- `@wazeko/core`: Typed error taxonomy (`WazekoError`, `ConnectionError`, `AuthenticationError`, `ProtocolError`, `SessionError`, `MessageError`), DeviceIdentity, and session Credentials models.
+- `@wazeko/transport`: Asynchronous WebSocket transport with `ws`, event listeners, `Socket` interface, and `ReconnectManager` exponential backoff.
+- `@wazeko/auth`: `AuthStore` abstraction (`FileAuthStore` JSON persistence & `MemoryAuthStore`), ANSI terminal QR Code generator (`qrcode-terminal`), and 8-character Pairing Code challenge generator (`ABCD-1234`).
+- `wazeko`: Main client façade, `WazekoBuilder`, async event iterators (`for await (const event of client.events())`), EventEmitter (`client.on`), Messaging API, and Group management.
+- Complete TypeScript test suite with 100% pass rate under `node --test`.
+- Runnable examples in `examples/` (`basic-client.ts`, `qr-login.ts`, `pairing-login.ts`, `echo-bot.ts`).
