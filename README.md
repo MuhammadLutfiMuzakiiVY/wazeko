@@ -5,45 +5,29 @@
 <h1 align="center">Wazeko</h1>
 
 <p align="center">
-  <strong>Fast. Async. Type-Safe. Production-Ready.</strong><br>
-  <em>An enterprise-grade, asynchronous WhatsApp Web client library built from the ground up in TypeScript.</em>
+  <strong>A modern, strongly typed, modular WhatsApp Web protocol client library for TypeScript & Node.js.</strong><br>
+  <em>Designed for predictable asynchronous workloads, clean separation of concerns, and type safety.</em>
 </p>
 
 <p align="center">
   <a href="https://github.com/MuhammadLutfiMuzakiiVY/wazeko/actions"><img src="https://img.shields.io/badge/tests-34%20passed-brightgreen.svg" alt="Test Status"></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.4%2B-blue.svg?logo=typescript" alt="TypeScript 5.4+"></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-18%2B-green.svg?logo=node.js" alt="Node.js 18+"></a>
-  <a href="#license"><img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version 1.0.0"></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="SECURITY.md"><img src="https://img.shields.io/badge/security-policy-blue.svg" alt="Security Policy"></a>
 </p>
 
 ---
 
 ## 📖 About Wazeko
 
-**Wazeko** is an open-source, production-ready WhatsApp Web client library written in **TypeScript**. Designed for high-scale automation, enterprise chatbots, and backend architectures, Wazeko delivers a high-throughput, modular, and type-safe engine with full support for **Signal Protocol E2EE**, **Noise Protocol Transport Handshakes**, **Streaming Media Cryptography**, and **Group Administration**.
+**Wazeko** is an open-source WhatsApp Web client library written entirely in **TypeScript** for **Node.js** (with Bun and Deno compatibility targets).
 
----
-
-## 🌟 Key Features
-
-- **🛡️ Full End-to-End Encryption (Signal Protocol)**:
-  - X3DH key agreement, Pre-Key Bundle generation and rotation (`rotateSignedPreKey`).
-  - Double Ratchet session cipher with per-message forward secrecy.
-- **🔐 Noise Protocol Transport Security**:
-  - `Noise_XX_25519_AESGCM_SHA256` state machine for secure WebSocket packet framing.
-  - Bidirectional frame ciphering with AEAD integrity verification.
-- **🖼️ Streaming Media Cryptography (MMS CDN)**:
-  - HKDF media key expansion (IV, CipherKey, MacKey, RefKey) for images, video, audio, documents, and stickers.
-  - Streaming AES-256-CBC cipher with 10-byte truncated HMAC-SHA256 integrity checks.
-- **👥 Full Group Administration API**:
-  - Create groups, update subjects/descriptions, add/remove/promote/demote participants, generate invite codes, and join/leave groups.
-- **⚡ High-Throughput & Fuzz Tested**:
-  - Binary Protocol Decoder delivering **>180,000 ops/sec**.
-  - Battle-tested with automated fuzzing against random byte corruptions and malformed packets.
-- **💙 Modern TypeScript & Async Iterators**:
-  - Supports both `for await (const event of client.events())` and `EventEmitter` (`client.on`).
-  - Zero `any` policy for 100% strict type safety.
+Rather than serving as an ad-hoc clone, Wazeko focuses on a clean architectural foundation:
+- **Strict Domain Types**: Full type safety for JIDs (user, group, LID, device, compound agent IDs), messages, and events.
+- **Modular Monorepo Architecture**: Decoupled packages separating protocol codecs, cryptography, transport, authentication, and high-level messaging.
+- **Dual Event Consumption**: Supports both standard `EventEmitter` patterns and modern **Async Iterators** (`for await (const event of client.events())`).
+- **Resilient Reconnection**: Exponential backoff manager designed for predictable connection recovery.
 
 ---
 
@@ -75,7 +59,7 @@
 
 | Package | Version | Description |
 |---|---|---|
-| [`wazeko`](packages/wazeko) | `1.0.0` | Main client facade, builder API, event dispatcher, high-level messaging & group management |
+| [`wazeko`](packages/wazeko) | `1.0.0` | Main client façade, builder API, event dispatcher, high-level messaging & group management |
 | [`@wazeko/core`](packages/wazeko-core) | `1.0.0` | Signal Protocol, Noise Handshake, Media Crypto, error system, session/device state |
 | [`@wazeko/transport`](packages/wazeko-transport) | `1.0.0` | WebSocket transport abstraction (`Socket` interface), reconnection manager |
 | [`@wazeko/auth`](packages/wazeko-auth) | `1.0.0` | QR Code generator, pairing code logic, `AuthStore` (`FileAuthStore`, `MemoryAuthStore`) |
@@ -109,7 +93,7 @@ for await (const event of client.events()) {
 }
 ```
 
-### 2. Group Administration
+### 2. Group Operations
 
 ```ts
 import { Wazeko } from "wazeko";
@@ -118,65 +102,70 @@ const client = Wazeko.builder().authStore("./auth").build();
 await client.connect();
 
 // Create group
-const group = await client.groups.create("Dev Team", [
+const group = await client.groups.create("Engineering Team", [
   "628123456789@s.whatsapp.net",
   "628987654321@s.whatsapp.net",
 ]);
 
 // Update subject & description
 await client.groups.updateSubject(group.id, "Core Engineers");
-await client.groups.updateDescription(group.id, "Official WhatsApp bot engineering group");
+await client.groups.updateDescription(group.id, "WhatsApp client automation discussions");
 
 // Add participant
 await client.groups.addParticipants(group.id, ["628111222333@s.whatsapp.net"]);
-
-// Get invite link code
-const inviteCode = await client.groups.getInviteCode(group.id);
-console.log("Join link code:", inviteCode);
 ```
 
-### 3. Media Encryption & Decryption
+### 3. Media Encryption Pipeline
 
 ```ts
 import { encryptMedia, decryptMedia } from "@wazeko/core";
 
-// Encrypt image before upload
-const rawImage = Buffer.from([...]);
-const { mediaKey, encryptedPayload, fileSha256 } = encryptMedia(rawImage, "image");
+// Encrypt payload before uploading to WhatsApp CDN
+const { mediaKey, encryptedPayload, fileSha256 } = encryptMedia(rawBuffer, "image");
 
-// Decrypt downloaded payload with integrity check
-const decryptedBuffer = decryptMedia(encryptedPayload, mediaKey, "image");
+// Decrypt and verify HMAC on download
+const decrypted = decryptMedia(encryptedPayload, mediaKey, "image");
 ```
 
 ---
 
-## 🧪 Testing & Benchmarks
+## 🧪 Benchmarks & Fuzz Testing
 
-Run unit & fuzz tests:
+Run test suite:
 ```bash
 npm test
 ```
 
-Run throughput benchmarks:
+Run throughput benchmark suite:
 ```bash
 npm run bench
 ```
 
-**Benchmark Results:**
-- Protocol Binary Decoding: **~181,000 ops/sec**
-- Protocol Binary Encoding: **~75,000 ops/sec**
-- SHA-256 Throughput (1KB): **~128,000 ops/sec**
+**Measured Benchmarks (Node.js 24 / AMD64):**
+- Protocol Binary Decoding: **~181,200 ops/sec**
+- Protocol Binary Encoding: **~75,300 ops/sec**
+- SHA-256 Throughput (1KB): **~128,800 ops/sec**
 - AES-GCM Encrypt + Decrypt (1KB): **~27,000 ops/sec**
 
 ---
 
-## 🗺️ Roadmap & Milestones
+## 🗺️ Architectural Maturity Roadmap
 
-- [x] **v0.1.0 — Foundation**: WebSocket transport, binary framing codec, QR Code rendering, Pairing Code, Session store, event queue & emitter.
-- [x] **v0.2.0 — Signal & Noise Protocol**: Full `Noise_XX_25519_AESGCM_SHA256` handshake, `FrameCipher`, Pre-Key generation & rotation, Double Ratchet cipher pipeline.
-- [x] **v0.3.0 — Media & Groups**: Media HKDF key expansion, streaming encryption/decryption with HMAC validation, complete Group Administration API.
-- [x] **v0.4.0 — Performance & Hardening**: Automated fuzzing test suites, random byte flip resistance, throughput benchmark suite.
-- [x] **v1.0.0 — Production Ready**: Monorepo v1.0.0 release, full API stability, comprehensive documentation, ready for npm registry.
+```text
+Wazeko
+├── v0.1 — Transport & Protocol Foundation (WebSocket, Framing, Token Dictionary)
+├── v0.2 — Authentication & Signal Protocol (Noise Handshake, PreKey Rotation, Ratchet)
+├── v0.3 — Multi-Device State & Media (HKDF Pipeline, Streaming AES-CBC, HMAC Verification)
+├── v0.4 — Messaging & Group Administration (Creation, Participant Mutations, Invites)
+├── v0.5 — Benchmarks & Fuzz Testing (Malformed Buffer Robustness, High-Throughput Suite)
+└── v1.0 — Production Ready & Ecosystem Hardening (Full API Stability, Security Policy)
+```
+
+---
+
+## 🛡️ Security
+
+Please review [SECURITY.md](SECURITY.md) for vulnerability reporting procedures and cryptographic safety practices.
 
 ---
 
