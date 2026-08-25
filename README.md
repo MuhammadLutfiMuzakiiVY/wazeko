@@ -1,13 +1,21 @@
-# Wazeko
+<p align="center">
+  <img src="assets/logo.png" alt="Wazeko Logo" width="480"/>
+</p>
 
-> **Wazeko — A Rust-native asynchronous WhatsApp Web client library.**
->
-> *Fast. Async. Rust-native.*
+<h1 align="center">Wazeko</h1>
 
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
-[![Rust](https://img.shields.io/badge/rust-1.75%2B-orange.svg)](https://www.rust-lang.org)
+<p align="center">
+  <strong>Fast. Async. Rust-native.</strong><br>
+  <em>A modular, high-performance WhatsApp Web client library built from the ground up in Rust.</em>
+</p>
 
-**Wazeko** is a modular, high-performance, asynchronous WhatsApp Web client library built from the ground up in Rust using Tokio and type-safe abstractions.
+<p align="center">
+  <a href="#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg" alt="License"></a>
+  <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/rust-1.75%2B-orange.svg" alt="Rust"></a>
+  <a href="https://github.com/MuhammadLutfiMuzakiiVY/wazeko"><img src="https://img.shields.io/badge/github-MuhammadLutfiMuzakiiVY%2Fwazeko-blue?logo=github" alt="GitHub"></a>
+</p>
+
+---
 
 ---
 
