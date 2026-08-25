@@ -1,6 +1,6 @@
 {
   "name": "@wazeko/protocol",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "WhatsApp Web Binary Protocol encoder, decoder, framing, and WAProto schema bindings",
   "main": "./src/index.ts",

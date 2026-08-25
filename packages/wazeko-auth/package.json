@@ -1,6 +1,6 @@
 {
   "name": "@wazeko/auth",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Authentication, QR code rendering, pairing codes, and credential stores for Wazeko",
   "main": "./src/index.ts",

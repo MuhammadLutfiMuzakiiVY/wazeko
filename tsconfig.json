@@ -17,7 +17,8 @@
   "include": [
     "packages/*/src/**/*",
     "examples/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "benchmarks/**/*"
   ],
   "exclude": [
     "node_modules",

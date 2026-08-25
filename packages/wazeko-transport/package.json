@@ -1,6 +1,6 @@
 {
   "name": "@wazeko/transport",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "WebSocket transport, reconnection manager, and connection state for Wazeko",
   "main": "./src/index.ts",

@@ -1,6 +1,6 @@
 {
   "name": "wazeko-monorepo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Wazeko — A TypeScript-native asynchronous WhatsApp Web client library",
@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "test": "node --test dist-test/**/*.test.js"
+    "test": "node --test dist/tests/*.test.js",
+    "bench": "node dist/benchmarks/protocol-bench.js"
   },
   "keywords": [
     "whatsapp",
@@ -17,7 +18,10 @@
     "websocket",
     "client",
     "typescript",
-    "multi-device"
+    "multi-device",
+    "signal-protocol",
+    "noise-protocol",
+    "e2ee"
   ],
   "author": "Wazeko Contributors",
   "license": "MIT",

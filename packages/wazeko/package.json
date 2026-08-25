@@ -1,6 +1,6 @@
 {
   "name": "wazeko",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Fast, asynchronous WhatsApp Web client library for TypeScript",
   "main": "./src/index.ts",

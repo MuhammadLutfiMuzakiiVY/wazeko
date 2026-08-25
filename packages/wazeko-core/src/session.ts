@@ -1,9 +1,7 @@
 import { Jid } from "../../wazeko-types/src/index.js";
+import { KeyPair } from "./crypto.js";
 
-export interface KeyPair {
-  publicKey: Uint8Array;
-  privateKey: Uint8Array;
-}
+export { KeyPair };
 
 export interface SignedPreKey {
   keyId: number;
