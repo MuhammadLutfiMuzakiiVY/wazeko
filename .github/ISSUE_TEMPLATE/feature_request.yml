@@ -1,5 +1,5 @@
-name: 💡 Feature Request
-description: Usulkan fitur baru, adapter database, atau peningkatan API untuk Wazeko
+name: "💡 Feature Request"
+description: "Usulkan fitur baru, adapter database, atau peningkatan API untuk Wazeko"
 title: "[FEAT]: "
 labels: ["enhancement", "feature-request"]
 body:
@@ -10,16 +10,16 @@ body:
   - type: textarea
     id: feature-description
     attributes:
-      label: Deskripsi Fitur / Kebutuhan
-      description: Jelaskan fitur apa yang ingin Anda tambahkan dan masalah apa yang diselesaikannya.
+      label: "Deskripsi Fitur / Kebutuhan"
+      description: "Jelaskan fitur apa yang ingin Anda tambahkan dan masalah apa yang diselesaikannya."
       placeholder: "Saya mengusulkan penambahan adapter database untuk Supabase / Cloudflare KV..."
     validations:
       required: true
   - type: textarea
     id: proposed-solution
     attributes:
-      label: Usulan Solusi / Desain API
-      description: Bagaimana bentuk API atau kode yang diharapkan jika fitur ini diimplementasikan?
+      label: "Usulan Solusi / Desain API"
+      description: "Bagaimana bentuk API atau kode yang diharapkan jika fitur ini diimplementasikan?"
       placeholder: |
         ```ts
         const store = new SupabaseAuthStore(supabaseClient);
@@ -29,6 +29,6 @@ body:
   - type: checkboxes
     id: contribution
     attributes:
-      label: Kontribusi
+      label: "Kontribusi"
       options:
         - label: "Saya bersedia membuat Pull Request untuk fitur ini 🚀"

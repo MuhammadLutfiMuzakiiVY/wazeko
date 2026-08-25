@@ -1,5 +1,5 @@
-name: 🐛 Bug Report
-description: Laporkan bug atau perilaku tak terduga pada Wazeko
+name: "🐛 Bug Report"
+description: "Laporkan bug atau perilaku tak terduga pada Wazeko"
 title: "[BUG]: "
 labels: ["bug", "triage"]
 body:
@@ -10,35 +10,35 @@ body:
   - type: input
     id: version
     attributes:
-      label: Versi Wazeko & Node.js
-      description: Sebutkan versi Wazeko dan Node.js yang Anda gunakan (contoh: Wazeko v1.0.0, Node.js v20.11.0).
+      label: "Versi Wazeko & Node.js"
+      description: "Sebutkan versi Wazeko dan Node.js yang Anda gunakan (contoh: Wazeko v1.0.0, Node.js v20.11.0)."
       placeholder: "Wazeko v1.0.0, Node.js v20.x"
     validations:
       required: true
   - type: dropdown
     id: os
     attributes:
-      label: Sistem Operasi
+      label: "Sistem Operasi"
       options:
-        - Linux (Ubuntu/Debian)
-        - Linux (Alpine/Docker)
-        - Windows
-        - macOS
+        - "Linux (Ubuntu/Debian)"
+        - "Linux (Alpine/Docker)"
+        - "Windows"
+        - "macOS"
     validations:
       required: true
   - type: textarea
     id: description
     attributes:
-      label: Deskripsi Masalah
-      description: Jelaskan secara singkat dan jelas apa bug yang terjadi.
+      label: "Deskripsi Masalah"
+      description: "Jelaskan secara singkat dan jelas apa bug yang terjadi."
       placeholder: "Sesi terputus saat..."
     validations:
       required: true
   - type: textarea
     id: reproduce
     attributes:
-      label: Langkah-Langkah Reproduksi
-      description: Langkah-langkah untuk memicu bug tersebut.
+      label: "Langkah-Langkah Reproduksi"
+      description: "Langkah-langkah untuk memicu bug tersebut."
       placeholder: |
         1. Inisialisasi client dengan AtomicFileAuthStore
         2. Jalankan client.connect()
@@ -48,7 +48,7 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Error Logs / Stacktrace
-      description: Lampirkan output error atau log JSON dari StructuredLogger.
+      label: "Error Logs / Stacktrace"
+      description: "Lampirkan output error atau log JSON dari StructuredLogger."
       render: shell
       placeholder: "Tempelkan log error di sini"
