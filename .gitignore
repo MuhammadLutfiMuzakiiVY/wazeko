@@ -1,0 +1,12 @@
+/target/
+**/*.rs.bk
+Cargo.lock
+.DS_Store
+*.swp
+*.swo
+auth/
+auth_*/
+credentials.json
+session.json
+.idea/
+.vscode/

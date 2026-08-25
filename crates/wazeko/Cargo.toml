@@ -1,0 +1,23 @@
+[package]
+name = "wazeko"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Fast, asynchronous WhatsApp Web client library for Rust"
+
+[dependencies]
+wazeko-core = { path = "../wazeko-core" }
+wazeko-types = { path = "../wazeko-types" }
+wazeko-transport = { path = "../wazeko-transport" }
+wazeko-auth = { path = "../wazeko-auth" }
+
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+thiserror.workspace = true
+rand.workspace = true
+base64.workspace = true
+hex.workspace = true

@@ -1,0 +1,70 @@
+pub const SINGLE_BYTE_TOKENS: &[&str] = &[
+    "",
+    "xmlstreamstart",
+    "xmlstreamend",
+    "s.whatsapp.net",
+    "type",
+    "participant",
+    "from",
+    "receipt",
+    "to",
+    "ribbon",
+    "status_elapsed",
+    "napi_version",
+    "notify",
+    "messages",
+    "chat",
+    "subject",
+    "action",
+    "presence",
+    "response",
+    "resume",
+    "status",
+    "set",
+    "value",
+    "get",
+    "item",
+    "preview",
+    "w",
+    "media",
+    "read",
+    "message",
+    "pkmsg",
+    "msg",
+    "raw",
+    "query",
+    "body",
+    "result",
+    "media_type",
+    "enc",
+    "enc_v2",
+    "notification",
+    "ack",
+    "call",
+    "relay",
+    "ib",
+    "edge",
+    "login",
+    "iq",
+    "ping",
+    "pin",
+    "pong",
+    "config",
+    "user",
+    "group",
+    "account",
+    "auth",
+    "success",
+    "failure",
+];
+
+pub fn get_token(index: usize) -> Option<&'static str> {
+    SINGLE_BYTE_TOKENS.get(index).copied()
+}
+
+pub fn get_token_index(token: &str) -> Option<u8> {
+    SINGLE_BYTE_TOKENS
+        .iter()
+        .position(|&t| t == token)
+        .and_then(|idx| u8::try_from(idx).ok())
+}

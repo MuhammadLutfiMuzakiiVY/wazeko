@@ -1,0 +1,35 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/wazeko",
+    "crates/wazeko-core",
+    "crates/wazeko-transport",
+    "crates/wazeko-auth",
+    "crates/wazeko-types",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Wazeko Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/wazeko/wazeko"
+keywords = ["whatsapp", "baileys", "websocket", "client", "async"]
+categories = ["network-programming", "asynchronous"]
+
+[workspace.dependencies]
+tokio = { version = "1.38", features = ["full"] }
+tokio-tungstenite = { version = "0.23", features = ["native-tls"] }
+futures-util = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+async-trait = "0.1"
+bytes = "1.6"
+qrcode = "0.14"
+rand = "0.8"
+base64 = "0.22"
+hex = "0.4"
+url = "2.5"

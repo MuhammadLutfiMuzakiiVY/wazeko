@@ -1,0 +1,17 @@
+[package]
+name = "wazeko-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core protocol binary codecs, error types, session state for Wazeko"
+
+[dependencies]
+wazeko-types = { path = "../wazeko-types" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+bytes.workspace = true
+tracing.workspace = true
+hex.workspace = true
+base64.workspace = true
+rand.workspace = true
