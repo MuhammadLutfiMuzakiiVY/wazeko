@@ -57,6 +57,6 @@ First off, thank you for considering contributing to **Wazeko**! We welcome all 
 
 ## 🏷️ Good First Issues
 
-Looking for somewhere to start? Check issues labeled with [`good first issue`](https://github.com/MuhammadLutfiMuzakiiVY/wazeko/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
+Looking for somewhere to start? Check issues labeled with [`good first issue`](https://github.com/MuhammadLutfiMuzakiiVY/Wazeko/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
 
 Thank you for helping make **Wazeko** the most reliable WhatsApp Web engine in the TypeScript ecosystem!

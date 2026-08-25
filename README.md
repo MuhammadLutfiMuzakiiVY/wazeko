@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MuhammadLutfiMuzakiiVY/wazeko/actions"><img src="https://img.shields.io/badge/tests-41%20passed-brightgreen.svg" alt="Test Status"></a>
+  <a href="https://github.com/MuhammadLutfiMuzakiiVY/Wazeko/actions"><img src="https://img.shields.io/badge/tests-41%20passed-brightgreen.svg" alt="Test Status"></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.4%2B-blue.svg?logo=typescript" alt="TypeScript 5.4+"></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-18%2B%20%7C%2020%2B%20%7C%2022%2B-green.svg?logo=node.js" alt="Node.js Support"></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
