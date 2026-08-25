@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { ConnectionState, Jid, Message, MessageContent, WazekoEventMap, WazekoEventName } from "../../wazeko-types/src/index.js";
 import { ProtocolNode, BinaryEncoder } from "../../wazeko-protocol/src/index.js";
-import { Credentials, initCredentials } from "../../wazeko-core/src/index.js";
+import { Credentials, initCredentials, randomBytes } from "../../wazeko-core/src/index.js";
 import { AuthStore, AtomicFileAuthStore, MemoryAuthStore, PairingCodeManager, QrCodeManager } from "../../wazeko-auth/src/index.js";
 import { ReconnectManager } from "../../wazeko-transport/src/index.js";
 import { ClientConfig } from "./config.js";
@@ -120,7 +120,7 @@ export class Wazeko extends EventEmitter implements WazekoClientInternal {
       this.setState("authenticating");
 
       if (this.config.authMethod === "qr") {
-        const randomChallenge = `2@${Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString("base64")},${Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString("base64")},${Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString("base64")}`;
+        const randomChallenge = `2@${Buffer.from(randomBytes(16)).toString("base64")},${Buffer.from(randomBytes(32)).toString("base64")},${Buffer.from(randomBytes(16)).toString("base64")}`;
         const qrEvent = this.qrManager.updateQr(randomChallenge, this.reconnectManager.attempt + 1, 60);
         this.emitEvent("qr", qrEvent);
 

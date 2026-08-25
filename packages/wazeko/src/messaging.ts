@@ -1,5 +1,6 @@
 import { Jid, isJidGroup, jidToString, jidUser, Message, MessageContent } from "../../wazeko-types/src/index.js";
 import { ProtocolNodeBuilder } from "../../wazeko-protocol/src/index.js";
+import { randomBytes } from "../../wazeko-core/src/index.js";
 import { WazekoClientInternal } from "./client.js";
 
 export class Messaging {
@@ -7,7 +8,7 @@ export class Messaging {
 
   async sendMessage(to: Jid | string, content: MessageContent): Promise<Message> {
     const toJid = typeof to === "string" ? jidUser(to) : to;
-    const msgId = `3EB0${Buffer.from(crypto.getRandomValues(new Uint8Array(8))).toString("hex").toUpperCase()}`;
+    const msgId = `3EB0${Buffer.from(randomBytes(8)).toString("hex").toUpperCase()}`;
     const meJid = this.client.getMe() ?? jidUser("0");
 
     const message: Message = {

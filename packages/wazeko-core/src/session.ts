@@ -1,5 +1,5 @@
 import { Jid } from "../../wazeko-types/src/index.js";
-import { KeyPair } from "./crypto.js";
+import { KeyPair, randomBytes } from "./crypto.js";
 
 export { KeyPair };
 
@@ -25,7 +25,7 @@ export interface Credentials {
 
 export function initCredentials(): Credentials {
   return {
-    clientId: Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString("base64"),
+    clientId: Buffer.from(randomBytes(16)).toString("base64"),
     registrationId: Math.floor(Math.random() * 65535),
     registered: false,
   };
