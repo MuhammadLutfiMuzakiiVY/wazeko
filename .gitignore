@@ -1,16 +1,12 @@
 node_modules/
 dist/
-packages/*/dist/
-.DS_Store
+dist-*/
+target/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.DS_Store
 auth/
 auth_*/
-credentials.json
-session.json
-.idea/
-.vscode/
-.env
-.env.local
+sessions/
+*.session.json
+*Requirements_Document*.md
+*Requirements Document*.md
